@@ -13,10 +13,11 @@ pip install -r requirements.txt
 pytest -v                       # suíte do core (evidência de "protótipo funcional")
 cd web && python manage.py migrate && python manage.py runserver
 # abrir http://localhost:8000
-# vídeo/demo: DEMO_DELAY_MS=350 python manage.py runserver  (resposta com "digitando…")
+# o "digitando…" (delay proporcional ao tamanho da resposta) já vem LIGADO por padrão;
+# para resposta instantânea: DEMO_DELAY=0 python manage.py runserver
 ```
 
-**92 testes automatizados** passando (`pytest -q`).
+**97 testes automatizados** passando (`pytest -q`).
 
 ## O que este protótipo demonstra
 
@@ -48,7 +49,7 @@ cd web && python manage.py migrate && python manage.py runserver
 ```
 core/    catalogo · tipos · interpreter · confirmacao · ledger · quadro · motor
          · trilha_formalizar · trilha_gerir · trilha_comprar · app
-tests/   92 testes (catálogo, interpreter, ledger, quadro, motor, 3 trilhas, integração, web)
+tests/   97 testes (catálogo, interpreter, ledger, quadro, motor, 3 trilhas, integração, web)
 web/     adaptador Django + HTMX (chat estilo WhatsApp; demo.py = seed do quadro)
 evidencia/  6 cenas do fluxo (para o vídeo e a evidência da 4.4.1)
 scripts_smoke.py  dirige o fluxo no navegador (Playwright) e regenera as cenas

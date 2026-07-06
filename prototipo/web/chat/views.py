@@ -35,13 +35,23 @@ def index(request):
     return render(request, "chat/index.html", {"mensagens": resp.mensagens})
 
 
+def _demora_ms(n_chars: int) -> int:
+    """Ritmo de digitação da demo: base + por-caractere, com teto (ms).
+    DEMO_DELAY desligado => 0 (instantâneo, p/ testes/CI)."""
+    if not settings.DEMO_DELAY:
+        return 0
+    return min(settings.DEMO_DELAY_BASE_MS + settings.DEMO_DELAY_PER_CHAR_MS * n_chars,
+               settings.DEMO_DELAY_CAP_MS)
+
+
 @require_POST
 def enviar(request):
-    if settings.DEMO_DELAY_MS:
-        time.sleep(settings.DEMO_DELAY_MS / 1000)
     sessao, _, motor = _obter(request)
     texto = request.POST.get("texto", "")
     resp = motor.processar(sessao, texto)
+    # espera proporcional ao tamanho da resposta => "digitando…" fica visível
+    if (ms := _demora_ms(sum(len(m.texto) for m in resp.mensagens))):
+        time.sleep(ms / 1000)
     return render(request, "chat/_baloes.html",
                   {"mensagens": resp.mensagens, "eco": texto})
 

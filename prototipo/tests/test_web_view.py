@@ -3,7 +3,53 @@
 """
 import pytest
 
+from chat.views import _demora_ms
+
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture(autouse=True)
+def _delay_off(settings):
+    """Demo liga o delay por padrão; nos testes web mantemos instantâneo.
+    Testes que exercitam o próprio delay re-ligam com settings.DEMO_DELAY = True."""
+    settings.DEMO_DELAY = False
+
+
+# --- ritmo de "digitação" proporcional ao tamanho da resposta (demo/vídeo) ---
+
+def test_demora_desligada_e_instantanea(settings):
+    settings.DEMO_DELAY = False
+    assert _demora_ms(500) == 0
+
+
+def test_demora_curta_usa_base_mais_por_char(settings):
+    settings.DEMO_DELAY = True
+    settings.DEMO_DELAY_BASE_MS = 250
+    settings.DEMO_DELAY_PER_CHAR_MS = 8
+    settings.DEMO_DELAY_CAP_MS = 1200
+    assert _demora_ms(10) == 250 + 8 * 10
+
+
+def test_demora_longa_bate_no_teto(settings):
+    settings.DEMO_DELAY = True
+    settings.DEMO_DELAY_BASE_MS = 250
+    settings.DEMO_DELAY_PER_CHAR_MS = 8
+    settings.DEMO_DELAY_CAP_MS = 1200
+    assert _demora_ms(10_000) == 1200
+
+
+def test_demora_cresce_com_o_tamanho(settings):
+    settings.DEMO_DELAY = True
+    assert _demora_ms(200) >= _demora_ms(20)
+
+
+def test_enviar_aplica_a_demora(client, settings, monkeypatch):
+    settings.DEMO_DELAY = True
+    dormidas = []
+    monkeypatch.setattr("chat.views.time.sleep", lambda s: dormidas.append(s))
+    client.get("/")
+    client.post("/enviar/", {"texto": "cuidar das contas"})
+    assert dormidas and dormidas[-1] > 0     # dormiu proporcional à resposta
 
 
 def test_index_responde_com_saudacao(client):

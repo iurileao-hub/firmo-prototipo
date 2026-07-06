@@ -32,6 +32,10 @@ STATIC_URL = "static/"
 WSGI_APPLICATION = "config.wsgi.application"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Delay artificial da resposta (ms) para a DEMO/vídeo parecer uma conversa
-# real e o indicador "digitando…" ficar visível. 0 = desligado (testes/CI).
-DEMO_DELAY_MS = int(os.environ.get("DEMO_DELAY_MS", "0"))
+# Ritmo de "digitação" da DEMO/vídeo: a resposta espera um tempo proporcional
+# ao seu tamanho, mantendo o indicador "digitando…" visível — parece uma conversa
+# real. Ligado por padrão; DEMO_DELAY=0 desliga (testes/CI ou resposta instantânea).
+DEMO_DELAY = os.environ.get("DEMO_DELAY", "1") != "0"
+DEMO_DELAY_BASE_MS = 250       # piso: toda resposta "pensa" um instante
+DEMO_DELAY_PER_CHAR_MS = 8     # quanto mais texto, mais tempo "digitando"
+DEMO_DELAY_CAP_MS = 1200       # teto: espera nunca cansa

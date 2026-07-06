@@ -1,0 +1,45 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Firmô — protótipo</title>
+  <link rel="stylesheet" href="{% static 'chat/app.css' %}">
+  <script src="{% static 'chat/htmx.min.js' %}"></script>
+  <script>
+    // chat rola pro fim a cada mensagem nova (comportamento WhatsApp)
+    addEventListener("htmx:afterSwap", () => {
+      const c = document.getElementById("conversa");
+      c.scrollTop = c.scrollHeight;
+    });
+    addEventListener("DOMContentLoaded", () => {
+      const c = document.getElementById("conversa");
+      c.scrollTop = c.scrollHeight;
+    });
+  </script>
+</head>
+<body>
+  <div class="fone">
+    <header class="barra">
+      <div class="avatar">F</div>
+      <div class="titulo"><strong>Firmô</strong><br><small>online</small></div>
+      <form action="{% url 'reiniciar' %}" method="post" class="reiniciar">
+        <button type="submit" title="Reiniciar conversa">↺</button>
+      </form>
+    </header>
+    <main id="conversa" class="conversa">
+      {% include "chat/_baloes.html" %}
+    </main>
+    <div id="digitando" class="balao firmo digitando" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    <form class="entrada" hx-post="{% url 'enviar' %}" hx-target="#conversa"
+          hx-swap="beforeend" hx-indicator="#digitando"
+          hx-on::after-request="this.reset()">
+      <input name="texto" autocomplete="off" placeholder="Escreva ou toque numa opção…" required>
+      <button type="submit">➤</button>
+    </form>
+  </div>
+</body>
+</html>

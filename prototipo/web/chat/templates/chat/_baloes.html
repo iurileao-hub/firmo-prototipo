@@ -1,0 +1,13 @@
+{% if eco %}<div class="balao meu">{{ eco }}<span class="hora">{% now "H:i" %}</span></div>{% endif %}
+{% for m in mensagens %}
+  <div class="balao firmo">{{ m.texto|linebreaksbr }}<span class="hora">{% now "H:i" %}</span></div>
+  {% if m.opcoes %}
+    <div class="opcoes">
+      {% for op in m.opcoes %}
+        <button class="opcao" hx-post="{% url 'enviar' %}" hx-target="#conversa"
+                hx-swap="beforeend" hx-indicator="#digitando"
+                name="texto" value="{{ op.rotulo }}">{{ op.rotulo }}</button>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endfor %}

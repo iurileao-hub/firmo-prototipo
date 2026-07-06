@@ -1,0 +1,36 @@
+:root { --verde:#25d366; --verde-esc:#075e54; --bg:#e5ddd5; --meu:#dcf8c6; }
+* { box-sizing:border-box; font-family:system-ui,-apple-system,sans-serif; }
+body { margin:0; background:#111; display:flex; justify-content:center; }
+.fone { width:100%; max-width:430px; height:100vh; display:flex; flex-direction:column;
+        background:var(--bg); }
+.barra { background:var(--verde-esc); color:#fff; padding:10px 14px; display:flex;
+         gap:10px; align-items:center; }
+.avatar { width:40px; height:40px; border-radius:50%; background:var(--verde);
+          color:#fff; display:grid; place-items:center; font-weight:700; flex:none; }
+.titulo { flex:1; }
+.reiniciar { margin:0; }
+.reiniciar button { background:transparent; border:none; color:#fff; font-size:20px;
+                    cursor:pointer; opacity:.85; }
+.reiniciar button:hover { opacity:1; }
+.conversa { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:8px; }
+.balao { max-width:80%; padding:8px 12px; border-radius:10px; font-size:15px;
+         line-height:1.35; white-space:pre-wrap; box-shadow:0 1px 1px rgba(0,0,0,.1); }
+.balao.firmo { background:#fff; align-self:flex-start; }
+.balao.meu { background:var(--meu); align-self:flex-end; }
+.opcoes { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; margin-bottom:4px; }
+.opcao { background:#fff; border:1px solid var(--verde); color:var(--verde-esc);
+         padding:6px 12px; border-radius:16px; font-size:14px; cursor:pointer; }
+.opcao:hover { background:var(--verde); color:#fff; }
+.entrada { display:flex; gap:8px; padding:10px; background:#f0f0f0; }
+.entrada input { flex:1; border:none; border-radius:20px; padding:10px 14px; font-size:15px; }
+.entrada button { background:var(--verde); color:#fff; border:none; width:44px;
+                  border-radius:50%; font-size:18px; cursor:pointer; }
+.hora { display:block; font-size:10px; color:#889; text-align:right; margin-top:2px; }
+.digitando { display:none; margin:0 14px 4px; padding:12px 14px; width:64px; }
+.digitando.htmx-request { display:flex; gap:4px; }
+.digitando span { width:7px; height:7px; border-radius:50%; background:#9ab;
+                  animation:pulsa 1s infinite ease-in-out; }
+.digitando span:nth-child(2) { animation-delay:.15s; }
+.digitando span:nth-child(3) { animation-delay:.3s; }
+@keyframes pulsa { 0%,100% { opacity:.3; transform:translateY(0); }
+                   50% { opacity:1; transform:translateY(-3px); } }

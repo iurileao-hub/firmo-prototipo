@@ -16,7 +16,7 @@ cd web && python manage.py migrate && python manage.py runserver
 # vídeo/demo: DEMO_DELAY_MS=350 python manage.py runserver  (resposta com "digitando…")
 ```
 
-**84 testes automatizados** passando (`pytest -q`).
+**92 testes automatizados** passando (`pytest -q`).
 
 ## O que este protótipo demonstra
 
@@ -29,6 +29,10 @@ cd web && python manage.py migrate && python manage.py runserver
 - **Ledger append-only:** correção é estorno compensatório, nunca edição
   (`tests/test_ledger.py`); o retrato do negócio (entradas/saídas/saldo) deriva
   só do livro (`Ledger.retrato()`).
+- **Orientação + extrato na Gerir (edital §3.1.1):** além de registrar, a trilha
+  oferece **extrato consolidado** (lido do ledger) e **orientação curada** nos quatro
+  fundamentos de gestão que o desafio nomeia — fluxo de caixa, precificação, margem e
+  giro de estoque (`tests/test_trilha_gerir.py::test_dicas_menu_cobre_os_quatro_fundamentos`).
 - **Compra coletiva com quadro agregado:** interesse só entra no quadro após
   confirmação explícita (`tests/test_trilha_comprar.py`); o quadro da demo
   parte de **dados de demonstração declarados** (`web/chat/demo.py`) — não são
@@ -44,7 +48,7 @@ cd web && python manage.py migrate && python manage.py runserver
 ```
 core/    catalogo · tipos · interpreter · confirmacao · ledger · quadro · motor
          · trilha_formalizar · trilha_gerir · trilha_comprar · app
-tests/   84 testes (catálogo, interpreter, ledger, quadro, motor, 3 trilhas, integração, web)
+tests/   92 testes (catálogo, interpreter, ledger, quadro, motor, 3 trilhas, integração, web)
 web/     adaptador Django + HTMX (chat estilo WhatsApp; demo.py = seed do quadro)
 evidencia/  6 cenas do fluxo (para o vídeo e a evidência da 4.4.1)
 scripts_smoke.py  dirige o fluxo no navegador (Playwright) e regenera as cenas

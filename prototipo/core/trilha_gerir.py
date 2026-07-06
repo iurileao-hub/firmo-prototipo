@@ -23,6 +23,10 @@ ESTADOS_GERIR: dict[str, Estado] = {
                   palavras=("despesa", "gastei", "compra", "paguei")),
             Opcao(id="ger_saldo", rotulo="Ver meu retrato", destino="ger_saldo",
                   palavras=("saldo", "retrato", "quanto", "caixa")),
+            Opcao(id="ger_extrato_op", rotulo="📄 Extrato do caixa", destino="ger_extrato",
+                  palavras=("extrato", "extratos", "movimento")),
+            Opcao(id="ger_dicas_op", rotulo="💡 Dicas de gestão", destino="ger_dicas_menu",
+                  palavras=("dica", "dicas", "aprender", "orientacao", "ajuda")),
         ),
     ),
     # --- venda ---
@@ -70,6 +74,65 @@ ESTADOS_GERIR: dict[str, Estado] = {
                   palavras=("voltar", "menu")),
         ),
     ),
+    # --- extrato consolidado (display puro, lê do ledger; edital §3.1.1) ---
+    "ger_extrato": Estado(
+        id="ger_extrato",
+        render="mostrar_extrato",
+        opcoes=(
+            Opcao(id="ger_extrato_voltar", rotulo="↩ Voltar", destino="ger_menu",
+                  palavras=("voltar", "menu")),
+        ),
+    ),
+    # --- dicas de gestão: os quatro fundamentos do edital §3.1.1 ---
+    "ger_dicas_menu": Estado(
+        id="ger_dicas_menu",
+        mensagens=("gerir_dicas_menu",),
+        opcoes=(
+            Opcao(id="ger_dica_fluxo_op", rotulo="💰 Fluxo de caixa",
+                  destino="ger_dica_fluxo", palavras=("fluxo",)),
+            Opcao(id="ger_dica_preco_op", rotulo="🏷️ Precificação",
+                  destino="ger_dica_preco", palavras=("preco", "precificacao")),
+            Opcao(id="ger_dica_margem_op", rotulo="📈 Margem",
+                  destino="ger_dica_margem", palavras=("margem", "lucro")),
+            Opcao(id="ger_dica_giro_op", rotulo="📦 Giro de estoque",
+                  destino="ger_dica_giro", palavras=("giro", "estoque")),
+            Opcao(id="ger_dicas_voltar", rotulo="↩ Voltar", destino="ger_menu",
+                  palavras=("voltar", "menu")),
+        ),
+    ),
+    # cada dica exibe texto curado e volta ao menu de dicas (não é beco).
+    "ger_dica_fluxo": Estado(
+        id="ger_dica_fluxo",
+        mensagens=("gerir_dica_fluxo",),
+        opcoes=(
+            Opcao(id="ger_dica_fluxo_voltar", rotulo="↩ Voltar",
+                  destino="ger_dicas_menu", palavras=("voltar", "menu")),
+        ),
+    ),
+    "ger_dica_preco": Estado(
+        id="ger_dica_preco",
+        mensagens=("gerir_dica_preco",),
+        opcoes=(
+            Opcao(id="ger_dica_preco_voltar", rotulo="↩ Voltar",
+                  destino="ger_dicas_menu", palavras=("voltar", "menu")),
+        ),
+    ),
+    "ger_dica_margem": Estado(
+        id="ger_dica_margem",
+        mensagens=("gerir_dica_margem",),
+        opcoes=(
+            Opcao(id="ger_dica_margem_voltar", rotulo="↩ Voltar",
+                  destino="ger_dicas_menu", palavras=("voltar", "menu")),
+        ),
+    ),
+    "ger_dica_giro": Estado(
+        id="ger_dica_giro",
+        mensagens=("gerir_dica_giro",),
+        opcoes=(
+            Opcao(id="ger_dica_giro_voltar", rotulo="↩ Voltar",
+                  destino="ger_dicas_menu", palavras=("voltar", "menu")),
+        ),
+    ),
 }
 
 
@@ -109,10 +172,28 @@ def construir_handlers_gerir(ledger) -> dict:
             "gerir_retrato", entradas=br(r["entradas"]), saidas=br(r["saidas"]),
             saldo=br(r["saldo"]), n=r["n_lancamentos"]))]
 
+    def mostrar_extrato(sessao: Sessao) -> list:
+        """Extrato consolidado: lista cada lançamento do ledger + os totais.
+        Caderno vazio devolve mensagem amigável (nunca crasha)."""
+        def br(d: Decimal) -> str:
+            return f"{d:.2f}".replace(".", ",")
+        lancs = ledger.lancamentos()
+        if not lancs:
+            return [Mensagem(texto=catalogo.render("gerir_extrato_vazio"))]
+        simbolo = {"venda": "＋", "despesa": "－", "estorno": "↩"}
+        linhas = "\n".join(
+            f"{simbolo.get(l.tipo, '•')} R$ {br(l.valor)} — {l.tipo}" for l in lancs
+        )
+        r = ledger.retrato()
+        return [Mensagem(texto=catalogo.render(
+            "gerir_extrato", linhas=linhas, entradas=br(r["entradas"]),
+            saidas=br(r["saidas"]), saldo=br(r["saldo"])))]
+
     return {
         "msg_confirma_venda": msg_confirma_venda,
         "msg_confirma_despesa": msg_confirma_despesa,
         "gravar_venda": gravar_venda,
         "gravar_despesa": gravar_despesa,
         "mostrar_retrato": mostrar_retrato,
+        "mostrar_extrato": mostrar_extrato,
     }

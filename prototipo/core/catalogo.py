@@ -57,6 +57,49 @@ CATALOGO: dict[str, str] = {
         "Sobrou: R$ {saldo}\n"
         "São {n} registros no seu caderno."
     ),
+    # extrato consolidado (edital §3.1.1: controle de fluxo de caixa).
+    # Rotulado "consolidado", não "mensal": o Ledger do protótipo não tem
+    # timestamp; o corte por mês entra quando ele vira model Django (Aceleração).
+    "gerir_extrato": (
+        "Extrato do seu caixa 📄\n"
+        "{linhas}\n"
+        "──────────\n"
+        "Entrou: R$ {entradas} · Saiu: R$ {saidas} · Sobrou: R$ {saldo}"
+    ),
+    "gerir_extrato_vazio": (
+        "Seu caderno ainda tá vazio 📄 Registra uma venda ou uma despesa "
+        "que eu monto seu extrato aqui."
+    ),
+    # orientação em gestão básica (edital §3.1.1: os quatro fundamentos).
+    # Conteúdo CURADO por humano — nunca gerado automaticamente (invariante da
+    # proposta §4.3). Rascunho do Daemon; revisado/reescrito por Iúri.
+    "gerir_dicas_menu": (
+        "Dicas rápidas pra cuidar do negócio 💡 Sobre o que você quer aprender?"
+    ),
+    "gerir_dica_fluxo": (
+        "💰 Fluxo de caixa\n"
+        "É saber quanto entra e quanto sai, todo dia. Regra de ouro: anote TUDO "
+        "na hora — cada venda e cada gasto, por menor que seja. Dinheiro que você "
+        "não anota é dinheiro que some."
+    ),
+    "gerir_dica_preco": (
+        "🏷️ Precificação\n"
+        "Pra achar o preço, comece pelo que a mercadoria te custou. Preço = custo "
+        "+ a sua parte de lucro. Nunca ponha preço 'no olho': vender sem saber o "
+        "custo é pagar pra trabalhar."
+    ),
+    "gerir_dica_margem": (
+        "📈 Margem\n"
+        "É o que sobra de cada venda depois de tirar o custo. Comprou por 10, "
+        "vendeu por 15 → sobraram 5. Margem apertada? Compre mais barato (comprando "
+        "junto!) ou ajuste o preço."
+    ),
+    "gerir_dica_giro": (
+        "📦 Giro de estoque\n"
+        "É a velocidade com que a mercadoria vende. O que sai rápido, reponha "
+        "sempre. O que fica meses parado é dinheiro dormindo na prateleira — vale "
+        "promoção pra trocar por algo que gira."
+    ),
     # --- Comprar Junto ---
     "comprar_intro": (
         "Comprando junto, a feira paga menos 💪\n"

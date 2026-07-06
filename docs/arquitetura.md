@@ -165,6 +165,12 @@ e registro no desenho de privacidade da proposta.
 
 - Job mensal: PNG (matplotlib) de fluxo de caixa/margem enviado ao lojista no chat —
   sem superfície de auth nova, demonstrável no vídeo de 5 min.
+- **Extrato consolidado sob demanda** (já no protótipo, `trilha_gerir`): o lojista pede
+  e recebe na hora a lista de lançamentos + totais, lida do ledger — complementa o PNG
+  mensal.
+- **Orientação curada em gestão básica** (já no protótipo): dicas dos quatro fundamentos
+  do edital §3.1.1 (fluxo de caixa, precificação, margem, giro), texto curado por humano
+  — nunca gerado por IA, coerente com a invariante de conteúdo.
 - Relatório de validação agregado (destrava pagamentos) exportável em PDF pelo painel.
 
 ## 5. Fluxo de dados e tratamento de erros
